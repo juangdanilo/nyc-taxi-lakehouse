@@ -26,6 +26,23 @@ flowchart LR
 | Time travel + `RESTORE` | `04_delta_features.py` §4 |
 | `OPTIMIZE ... ZORDER BY` | `03_gold.py` |
 
+### Results on Databricks
+
+**Schema enforcement vs. evolution.** An unexpected column is rejected; the same write
+succeeds once the writer opts in with `mergeSchema`.
+
+![Schema enforcement and evolution](docs/images/schema-enforcement.png)
+
+**Time travel + RESTORE.** An accidental `DELETE` empties the table; the previous version is
+still readable and `RESTORE` brings every row back.
+
+![Time travel and RESTORE](docs/images/time-travel-restore.png)
+
+**Table history.** Every committed change is a version. The two rejected writes (schema
+mismatch and `CHECK` violation) left no trace: failed transactions never commit.
+
+![Delta table history](docs/images/delta-history.png)
+
 ## Design decisions
 
 - **MERGE instead of overwrite in silver.** Batches can be replayed or arrive late; MERGE on
