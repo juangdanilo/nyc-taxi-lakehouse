@@ -57,7 +57,7 @@ The default catalog is `workspace` (Databricks Free Edition); change the `catalo
 Nothing to install locally. The repo ships a Dev Container (`.devcontainer/`) with
 Python 3.12, Java 17, uv and the Databricks CLI.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/<your-user>/nyc-taxi-lakehouse)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/juangdanilo/nyc-taxi-lakehouse)
 
 1. In GitHub → **Settings → Codespaces → Secrets**, add `DATABRICKS_HOST` and
    `DATABRICKS_TOKEN` and grant them to this repo (needed only for deploying).
