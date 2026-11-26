@@ -10,6 +10,7 @@
 
 # COMMAND ----------
 
+from delta.tables import DeltaTable
 from pyspark.sql import functions as F
 
 DEMO = f"{CATALOG}.silver.trips_demo"
@@ -65,9 +66,9 @@ good_version = spark.sql(f"DESCRIBE HISTORY {DEMO} LIMIT 1").first()["version"]
 spark.sql(f"DELETE FROM {DEMO} WHERE fare_amount > 0")  # the "accident"
 
 print("now:", spark.table(DEMO).count())
-print(f"version {good_version}:", spark.sql(f"SELECT * FROM {DEMO} VERSION AS OF {good_version}").count())
+print(f"version {good_version}:", spark.read.option("versionAsOf", good_version).table(DEMO).count())
 
-spark.sql(f"RESTORE TABLE {DEMO} TO VERSION AS OF {good_version}")
+DeltaTable.forName(spark, DEMO).restoreToVersion(good_version)
 print("after restore:", spark.table(DEMO).count())
 
 # COMMAND ----------
