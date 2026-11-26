@@ -26,5 +26,15 @@ BATCHES = {
     "2": "tpep_pickup_datetime >= '2016-02-01'",
 }
 
+
+def get_batch_id() -> str:
+    """Read the batch_id widget/job parameter and fail fast on unknown values."""
+    dbutils.widgets.dropdown("batch_id", "1", list(BATCHES))
+    batch_id = dbutils.widgets.get("batch_id")
+    if batch_id not in BATCHES:
+        raise ValueError(f"batch_id must be one of {list(BATCHES)}, got {batch_id!r}")
+    return batch_id
+
+
 for layer in ("bronze", "silver", "gold"):
     spark.sql(f"CREATE SCHEMA IF NOT EXISTS {CATALOG}.{layer}")

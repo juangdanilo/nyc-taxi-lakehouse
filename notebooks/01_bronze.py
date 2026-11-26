@@ -12,8 +12,7 @@
 
 from pyspark.sql import functions as F
 
-dbutils.widgets.dropdown("batch_id", "1", list(BATCHES))
-batch_id = dbutils.widgets.get("batch_id")
+batch_id = get_batch_id()
 
 raw = (
     spark.table(SOURCE)

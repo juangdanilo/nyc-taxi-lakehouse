@@ -16,8 +16,7 @@ from pyspark.sql import functions as F
 
 from taxi_pipeline.transforms import clean_trips, dedupe_latest, upsert_trips
 
-dbutils.widgets.dropdown("batch_id", "1", list(BATCHES))
-batch_id = dbutils.widgets.get("batch_id")
+batch_id = get_batch_id()
 
 updates = dedupe_latest(clean_trips(spark.table(BRONZE).where(F.col("_batch_id") == batch_id)))
 
