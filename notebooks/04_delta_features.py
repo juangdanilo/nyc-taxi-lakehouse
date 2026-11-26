@@ -21,11 +21,12 @@ sample = spark.table(DEMO).limit(1)
 
 # MAGIC %md ## 1. Schema enforcement
 # MAGIC Why it matters: a bad upstream change fails loudly instead of silently corrupting the table.
+# MAGIC An unexpected new column is rejected unless the writer opts in (see §2).
 
 # COMMAND ----------
 
 try:
-    sample.withColumn("fare_amount", F.lit("not a number")).write.mode("append").saveAsTable(DEMO)
+    sample.withColumn("tip_amount", F.lit(2.5)).write.mode("append").saveAsTable(DEMO)
 except Exception as e:
     print("Rejected as expected:", str(e).splitlines()[0])
 
