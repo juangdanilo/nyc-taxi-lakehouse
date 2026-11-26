@@ -52,6 +52,19 @@ flowchart LR
 
 The default catalog is `workspace` (Databricks Free Edition); change the `catalog` widget if needed.
 
+## Deploy as a Workflow job
+
+`databricks.yml` is a [Databricks Asset Bundle](https://docs.databricks.com/aws/en/dev-tools/bundles/)
+that defines the job `nyc-taxi-pipeline`: bronze → silver → gold, with `batch_id` and
+`catalog` as job parameters. Requires the [Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/install).
+
+```bash
+databricks auth login --host <your-workspace-url>
+databricks bundle validate
+databricks bundle deploy
+databricks bundle run taxi_pipeline --params batch_id=2
+```
+
 ## Run the tests locally
 
 Requires Java 17 and [uv](https://docs.astral.sh/uv/).
@@ -60,6 +73,8 @@ Requires Java 17 and [uv](https://docs.astral.sh/uv/).
 uv run --python 3.12 pytest
 ```
 
+The same tests run on every push and pull request via GitHub Actions (`.github/workflows/ci.yml`).
+
 ## Next steps
 
-Auto Loader / streaming ingestion, a Databricks Workflow job, and CI running the tests.
+Auto Loader / streaming ingestion, and an ML model on silver tracked with MLflow.
