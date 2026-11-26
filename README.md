@@ -52,6 +52,24 @@ flowchart LR
 
 The default catalog is `workspace` (Databricks Free Edition); change the `catalog` widget if needed.
 
+## Dev environment (GitHub Codespaces)
+
+Nothing to install locally. The repo ships a Dev Container (`.devcontainer/`) with
+Python 3.12, Java 17, uv and the Databricks CLI.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/<your-user>/nyc-taxi-lakehouse)
+
+1. In GitHub → **Settings → Codespaces → Secrets**, add `DATABRICKS_HOST` and
+   `DATABRICKS_TOKEN` and grant them to this repo (needed only for deploying).
+2. **Code → Codespaces → Create codespace on main**.
+3. In the terminal:
+
+```bash
+uv run pytest                 # unit tests, local Spark + Delta
+databricks bundle deploy      # deploy the Workflow job
+databricks bundle run taxi_pipeline
+```
+
 ## Deploy as a Workflow job
 
 `databricks.yml` is a [Databricks Asset Bundle](https://docs.databricks.com/aws/en/dev-tools/bundles/)
@@ -59,7 +77,7 @@ that defines the job `nyc-taxi-pipeline`: bronze → silver → gold, with `batc
 `catalog` as job parameters. Requires the [Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/install).
 
 ```bash
-databricks auth login --host <your-workspace-url>
+databricks auth login --host <your-workspace-url>   # skip in Codespaces: secrets handle auth
 databricks bundle validate
 databricks bundle deploy
 databricks bundle run taxi_pipeline --params batch_id=2
