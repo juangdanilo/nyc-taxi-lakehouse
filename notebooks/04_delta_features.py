@@ -14,7 +14,9 @@ from delta.tables import DeltaTable
 from pyspark.sql import functions as F
 
 DEMO = f"{CATALOG}.silver.trips_demo"
-spark.sql(f"CREATE OR REPLACE TABLE {DEMO} AS SELECT * FROM {SILVER} LIMIT 1000")
+# DROP first: CREATE OR REPLACE keeps the old history, and the demo should start at version 0
+spark.sql(f"DROP TABLE IF EXISTS {DEMO}")
+spark.sql(f"CREATE TABLE {DEMO} AS SELECT * FROM {SILVER} LIMIT 1000")
 spark.sql(f"ALTER TABLE {DEMO} ADD CONSTRAINT non_negative_fare CHECK (fare_amount >= 0)")
 sample = spark.table(DEMO).limit(1)
 
